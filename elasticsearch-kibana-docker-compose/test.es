@@ -151,3 +151,108 @@ GET /search-used-car/_search
 
 
 // curl -X POST "http://localhost:9200/_bulk" -H "Content-Type: application/json" --data-binary @ayc5oo.json
+
+PUT car-master.v6
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "search_index_custom_standard": {
+          "type": "custom",
+          "char_filter": [
+            "html_strip"
+          ],
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "trim"
+          ]
+        },
+        "search_query_custom_standard": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "trim"
+          ]
+        }
+      }
+    }
+  }
+}
+
+GET car-master.v6/_analyze
+{
+  "char_filter":["html_strip"],
+  "tokenizer": "whitespace",
+  "filter": ["lowercase","trim"],
+  "text": ["<B> 아아</B>"]
+}
+
+GET car-master.v6/_analyze
+{
+  "analyzer": "search_query_custom_standard",
+  "text": ["<B> DDD</B>"],
+  "explain": true
+}
+
+
+
+
+DELETE test_index
+
+PUT /test_index
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "index_analyzer": {
+          "type": "standard"
+        },
+        "search_analyzer": {
+          "type": "whitespace"   
+        },
+        "quote_analyzer": {
+          "type": "standard"  
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "index_analyzer",         // 인덱싱: standard
+        "search_analyzer": "search_analyzer", // 검색: whitespace
+        "search_quote_analyzer": "quote_analyzer" // "구문 검색": keyword
+      }
+    }
+  }
+}
+
+
+
+POST /test_index/_doc
+{
+  "title": "quick brown fox"
+}
+
+
+GET /test_index/_search
+{
+  "query": {
+    "match": {
+      "title": "quick brown"
+    }
+  }
+}
+
+
+GET /test_index/_search
+{
+  "query": {
+    "match_phrase": {
+      "title": "\"quick brown\""
+    }
+  }
+}
