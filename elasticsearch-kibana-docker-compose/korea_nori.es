@@ -1,4 +1,5 @@
 DELETE car-master.v12
+
 PUT /car-master.v12
 {
   "settings": {

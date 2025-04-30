@@ -1,3 +1,5 @@
+DELETE car-master
+
 PUT car-master
 {
   "settings": {
@@ -85,7 +87,7 @@ PUT car-master
         }
       },
       "tokenizer": {
-        "nori_tokenzier": {
+        "nori_tokenizer": {
           "type": "nori_tokenizer",
           "user_dictionary": "dictionary/userdic_ko.txt",
           "decompound_mode": "discard"

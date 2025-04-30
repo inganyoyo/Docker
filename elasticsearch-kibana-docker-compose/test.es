@@ -152,6 +152,11 @@ GET /search-used-car/_search
 
 // curl -X POST "http://localhost:9200/_bulk" -H "Content-Type: application/json" --data-binary @ayc5oo.json
 
+// curl -X POST "http://localhost:9200/_bulk" \
+//   -H "Content-Type: application/json" \
+//   -u elastic:changeme \
+//   --data-binary @ayc5oo.json
+
 PUT car-master.v6
 {
   "settings": {
